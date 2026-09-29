@@ -1,0 +1,983 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>КиберБезопасность 50+</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: #1a1f2e;
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 16px;
+    font-size: 18px;
+    line-height: 1.5;
+  }
+
+  .phone {
+    width: 100%;
+    max-width: 400px;
+    background: #232a3d;
+    border-radius: 32px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    overflow: hidden;
+    min-height: 700px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .status-bar {
+    background: #1a1f2e;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #8892a6;
+  }
+
+  .header {
+    background: #2d3650;
+    padding: 20px 24px;
+    border-bottom: 1px solid #3a4460;
+  }
+
+  .header h1 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #ffffff;
+  }
+
+  .header p {
+    font-size: 14px;
+    color: #8892a6;
+    margin-top: 4px;
+  }
+
+  .screen {
+    flex: 1;
+    padding: 24px;
+    display: none;
+    flex-direction: column;
+    gap: 16px;
+    overflow-y: auto;
+  }
+
+  .screen.active {
+    display: flex;
+  }
+
+  .progress {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+
+  .progress-dot {
+    flex: 1;
+    height: 4px;
+    background: #3a4460;
+    border-radius: 2px;
+    transition: background 0.3s;
+  }
+
+  .progress-dot.done {
+    background: #4ade80;
+  }
+
+  .progress-dot.current {
+    background: #60a5fa;
+  }
+
+  .card {
+    background: #2d3650;
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid #3a4460;
+  }
+
+  .card.bad {
+    border-color: #ef4444;
+    background: #2d1f2e;
+  }
+
+  .card.good {
+    border-color: #4ade80;
+    background: #1f2d24;
+  }
+
+  .scene-icon {
+    font-size: 48px;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  .scene-title {
+    font-size: 20px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  .scene-desc {
+    font-size: 16px;
+    color: #c0c8d8;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .message-bubble {
+    background: #1a1f2e;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    font-size: 16px;
+    border-left: 4px solid #60a5fa;
+  }
+
+  .message-bubble.sms {
+    border-left-color: #fbbf24;
+  }
+
+  .message-bubble.call {
+    border-left-color: #ef4444;
+  }
+
+  .message-sender {
+    font-size: 13px;
+    color: #8892a6;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+
+  .btn {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 16px 24px;
+    border-radius: 12px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.2s, transform 0.1s;
+    font-family: inherit;
+  }
+
+  .btn:active {
+    transform: scale(0.97);
+  }
+
+  .btn:hover {
+    background: #2563eb;
+  }
+
+  .btn.danger {
+    background: #ef4444;
+  }
+
+  .btn.danger:hover {
+    background: #dc2626;
+  }
+
+  .btn.success {
+    background: #22c55e;
+  }
+
+  .btn.success:hover {
+    background: #16a34a;
+  }
+
+  .btn.secondary {
+    background: #3a4460;
+  }
+
+  .btn.secondary:hover {
+    background: #4a5470;
+  }
+
+  .btn-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .result-icon {
+    font-size: 64px;
+    text-align: center;
+    margin: 16px 0;
+  }
+
+  .result-title {
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+
+  .result-text {
+    font-size: 16px;
+    color: #c0c8d8;
+    text-align: center;
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+
+  .tip-box {
+    background: #1a1f2e;
+    border-radius: 12px;
+    padding: 16px;
+    border-left: 4px solid #fbbf24;
+    margin-top: 8px;
+  }
+
+  .tip-box .tip-label {
+    font-size: 13px;
+    color: #fbbf24;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+
+  .tip-box p {
+    font-size: 15px;
+    color: #c0c8d8;
+  }
+
+  .home-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 8px;
+  }
+
+  .menu-item {
+    background: #2d3650;
+    border: 1px solid #3a4460;
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  .menu-item:active {
+    transform: scale(0.98);
+  }
+
+  .menu-item:hover {
+    background: #353f5c;
+  }
+
+  .menu-icon {
+    font-size: 32px;
+    width: 48px;
+    text-align: center;
+    flex-shrink: 0;
+    color: #60a5fa;
+    font-weight: 700;
+  }
+
+  .menu-text h3 {
+    font-size: 17px;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 4px;
+  }
+
+  .menu-text p {
+    font-size: 14px;
+    color: #8892a6;
+  }
+
+  .stats {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .stat-box {
+    flex: 1;
+    background: #2d3650;
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    border: 1px solid #3a4460;
+  }
+
+  .stat-num {
+    font-size: 28px;
+    font-weight: 700;
+    color: #60a5fa;
+  }
+
+  .stat-label {
+    font-size: 13px;
+    color: #8892a6;
+    margin-top: 4px;
+  }
+
+  .back-btn {
+    background: transparent;
+    border: none;
+    color: #8892a6;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 8px 0;
+    text-align: left;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .back-btn:hover {
+    color: #ffffff;
+  }
+
+  .welcome-text {
+    font-size: 16px;
+    color: #c0c8d8;
+    line-height: 1.6;
+    margin-bottom: 8px;
+  }
+
+  .welcome-text strong {
+    color: #60a5fa;
+  }
+
+  .phone-call {
+    background: #1a1f2e;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    margin: 0 auto 16px;
+    animation: pulse 1.5s infinite;
+    color: #ef4444;
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
+    50% { box-shadow: 0 0 0 20px rgba(239, 68, 68, 0); }
+  }
+
+  .scroll-hint {
+    text-align: center;
+    font-size: 13px;
+    color: #8892a6;
+    margin-top: 4px;
+  }
+
+  .badge {
+    display: inline-block;
+    background: #3b82f6;
+    color: white;
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+
+  .final-score {
+    text-align: center;
+    font-size: 48px;
+    font-weight: 800;
+    color: #4ade80;
+    margin: 16px 0;
+  }
+
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #3a4460;
+    border-radius: 2px;
+  }
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <div class="status-bar">
+    <span>9:41</span>
+    <span>Сеть 100%</span>
+  </div>
+
+  <div class="header">
+    <h1 id="headerTitle">КиберБезопасность</h1>
+    <p id="headerSub">Практический тренажёр</p>
+  </div>
+
+  <!-- ЭКРАН: ГЛАВНОЕ МЕНЮ -->
+  <div class="screen active" id="screen-home">
+    <div class="welcome-text">
+      Здравствуйте! Этот тренажёр поможет вам <strong>научиться защищать свои данные</strong> от телефонных мошенников, фишинговых сайтов и СМС-обмана.
+    </div>
+    <div class="welcome-text">
+      Пройдите короткие реальные ситуации и узнайте, как правильно действовать.
+    </div>
+
+    <div class="stats">
+      <div class="stat-box">
+        <div class="stat-num" id="statScore">0</div>
+        <div class="stat-label">Баллов</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" id="statDone">0/6</div>
+        <div class="stat-label">Пройдено</div>
+      </div>
+    </div>
+
+    <div class="home-menu">
+      <div class="menu-item" onclick="startScenario(0)">
+        <div class="menu-icon">СМС</div>
+        <div class="menu-text">
+          <h3>СМС от «банка»</h3>
+          <p>Подозрительное сообщение о блокировке карты</p>
+        </div>
+      </div>
+      <div class="menu-item" onclick="startScenario(1)">
+        <div class="menu-icon">ТЕЛ</div>
+        <div class="menu-text">
+          <h3>Звонок из «службы безопасности»</h3>
+          <p>Незнакомец просит назвать код из СМС</p>
+        </div>
+      </div>
+      <div class="menu-item" onclick="startScenario(2)">
+        <div class="menu-icon">URL</div>
+        <div class="menu-text">
+          <h3>Ссылка в сообщении</h3>
+          <p>Просят перейти на сайт и ввести данные</p>
+        </div>
+      </div>
+      <div class="menu-item" onclick="startScenario(3)">
+        <div class="menu-icon">СМС</div>
+        <div class="menu-text">
+          <h3>«Мама, я попал в беду»</h3>
+          <p>Сообщение от «родственника» с просьбой о деньгах</p>
+        </div>
+      </div>
+      <div class="menu-item" onclick="startScenario(4)">
+        <div class="menu-icon">ПРИЗ</div>
+        <div class="menu-text">
+          <h3>«Вы выиграли приз»</h3>
+          <p>Заманчивое предложение с подвохом</p>
+        </div>
+      </div>
+      <div class="menu-item" onclick="startScenario(5)">
+        <div class="menu-icon">БАНК</div>
+        <div class="menu-text">
+          <h3>«Сотрудник банка» у банкомата</h3>
+          <p>Помощь с «проблемной» картой</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЭКРАН: СЦЕНАРИЙ -->
+  <div class="screen" id="screen-scenario">
+    <button class="back-btn" onclick="goHome()">< Назад</button>
+    <div class="progress" id="progressBar"></div>
+    <div id="scenarioContent"></div>
+  </div>
+
+  <!-- ЭКРАН: РЕЗУЛЬТАТ -->
+  <div class="screen" id="screen-result">
+    <div id="resultContent"></div>
+  </div>
+
+  <!-- ЭКРАН: ФИНАЛ -->
+  <div class="screen" id="screen-final">
+    <div class="result-icon">OK</div>
+    <div class="result-title">Отлично!</div>
+    <div class="result-text">Вы прошли все ситуации. Помните главные правила — и мошенники не смогут вас обмануть.</div>
+    <div class="final-score" id="finalScore">0</div>
+    <div class="tip-box">
+      <div class="tip-label">Главные правила</div>
+      <p>1. Никогда не называйте код из СМС никому.<br>
+      2. Кладите трубку при разговоре о деньгах.<br>
+      3. Не переходите по ссылкам из СМС.<br>
+      4. Проверяйте родственников личным звонком.<br>
+      5. Бесплатный сыр — только в мышеловке.</p>
+    </div>
+    <div class="btn-group" style="margin-top: 20px;">
+      <button class="btn" onclick="resetAll()">Пройти снова</button>
+      <button class="btn secondary" onclick="goHome()">В главное меню</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ==================== ДАННЫЕ СЦЕНАРИЕВ ====================
+var scenarios = [
+  {
+    title: "СМС от «банка»",
+    steps: [
+      {
+        type: "message",
+        sender: "BANK-INFORM",
+        text: "Уважаемый клиент! Ваша карта заблокирована. Для разблокировки позвоните по номеру 8-800-XXX-XX-XX",
+        cls: "sms",
+        question: "Что будете делать?",
+        options: [
+          { text: "Позвоню по номеру из СМС", correct: false, tip: "Номер в СМС — мошеннический. Банк никогда не указывает в СМС номера для срочных звонков." },
+          { text: "Позвоню в банк по номеру с обратной стороны карты", correct: true, tip: "Верно! Только официальный номер банка с вашей карты — безопасен." },
+          { text: "Отвечу на СМС", correct: false, tip: "Отвечать на такие СМС опасно — вы подтвердите, что номер активен." }
+        ]
+      },
+      {
+        type: "message",
+        sender: "BANK-INFORM",
+        text: "Ваш номер подтверждён. Для отмены операции сообщите код из СМС: 4832",
+        cls: "sms",
+        question: "Пришло СМС с кодом. Ваши действия?",
+        options: [
+          { text: "Сообщу код, чтобы отменить операцию", correct: false, tip: "Никому и никогда не называйте код из СМС! Даже «сотруднику банка»." },
+          { text: "Никому не сообщу код и заблокирую карту через приложение", correct: true, tip: "Правильно! Код из СМС — это ключ к вашим деньгам. Его нельзя называть." },
+          { text: "Перешлю СМС в банк", correct: false, tip: "Не стоит пересылать коды. Лучше сразу заблокировать карту в приложении банка." }
+        ]
+      }
+    ]
+  },
+  {
+    title: "Звонок из «службы безопасности»",
+    steps: [
+      {
+        type: "call",
+        sender: "Служба безопасности банка",
+        text: "Здравствуйте! Это служба безопасности. Зафиксирована попытка перевода с вашей карты. Вы подтверждаете операцию?",
+        cls: "call",
+        question: "Что ответите?",
+        options: [
+          { text: "Нет, не подтверждаю. Что мне делать?", correct: false, tip: "Не продолжайте разговор. Мошенники используют любую вашу фразу, чтобы затянуть беседу." },
+          { text: "Положу трубку и сам позвоню в банк по номеру с карты", correct: true, tip: "Идеально! Кладите трубку и звоните только по официальному номеру." },
+          { text: "Попрошу перезвонить позже", correct: false, tip: "Лучше сразу прекратить разговор. Мошенники могут перезвонить снова." }
+        ]
+      },
+      {
+        type: "call",
+        sender: "Служба безопасности банка",
+        text: "Чтобы отменить перевод, продиктуйте код из СМС. Иначе деньги спишутся!",
+        cls: "call",
+        question: "Вас торопят и пугают. Что сделаете?",
+        options: [
+          { text: "Продиктую код — жалко денег", correct: false, tip: "Именно на испуг и расчёт. Код из СМС — никогда и никому!" },
+          { text: "Положу трубку и перезвоню в банк сам", correct: true, tip: "Верно! Настоящий банк никогда не просит код из СМС." },
+          { text: "Спрошу имя сотрудника", correct: false, tip: "Мошенник назовёт любое имя. Это не поможет." }
+        ]
+      }
+    ]
+  },
+  {
+    title: "Ссылка в сообщении",
+    steps: [
+      {
+        type: "message",
+        sender: "Госуслуги",
+        text: "Вам положена выплата 12 000 руб. Перейдите по ссылке: gosuslugi-pay.ru",
+        cls: "sms",
+        question: "Ваши действия?",
+        options: [
+          { text: "Перейду по ссылке и введу данные карты", correct: false, tip: "Это фишинговая ссылка. Адрес поддельный — gosuslugi-pay.ru не официальный сайт." },
+          { text: "Не перейду. Проверю информацию на официальном сайте госуслуг", correct: true, tip: "Правильно! Всегда проверяйте адрес сайта. Официальный — gosuslugi.ru." },
+          { text: "Перешлю другу, пусть тоже получит", correct: false, tip: "Не распространяйте подозрительные ссылки — этим вы помогаете мошенникам." }
+        ]
+      },
+      {
+        type: "message",
+        sender: "Госуслуги",
+        text: "Для получения выплаты введите номер карты, срок действия и CVV-код",
+        cls: "sms",
+        question: "Просят данные карты. Что делать?",
+        options: [
+          { text: "Введу данные — хочу получить деньги", correct: false, tip: "CVV-код и срок действия нельзя вводить на незнакомых сайтах. Это кража данных." },
+          { text: "Закрою сайт и проверю информацию на gosuslugi.ru", correct: true, tip: "Верно! Никогда не вводите данные карты на подозрительных сайтах." },
+          { text: "Введу только номер карты", correct: false, tip: "Даже номер карты опасен — мошенники могут подобрать остальное." }
+        ]
+      }
+    ]
+  },
+  {
+    title: "«Мама, я попал в беду»",
+    steps: [
+      {
+        type: "message",
+        sender: "Неизвестный номер",
+        text: "Мама, я попал в аварию! Срочно нужны деньги. Не звони, я не могу говорить. Переведи 50 000 на карту 2202 20XX XXXX XXXX",
+        cls: "sms",
+        question: "Что будете делать?",
+        options: [
+          { text: "Сразу переведу деньги — это же ребёнок!", correct: false, tip: "Это классический обман. Мошенники играют на родительских чувствах." },
+          { text: "Позвоню ребёнку лично по известному номеру", correct: true, tip: "Правильно! Всегда перезванивайте родственнику по его настоящему номеру." },
+          { text: "Напишу ответное СМС", correct: false, tip: "Мошенники только этого и ждут. Звоните, а не пишите." }
+        ]
+      },
+      {
+        type: "message",
+        sender: "Неизвестный номер",
+        text: "Мама, я не могу говорить! Просто переведи деньги, потом объясню!",
+        cls: "sms",
+        question: "Настаивают на переводе. Ваши действия?",
+        options: [
+          { text: "Переведу — вдруг правда беда", correct: false, tip: "Именно на спешку и расчёт. Не переводите деньги незнакомцам." },
+          { text: "Позвоню ребёнку и проверю", correct: true, tip: "Верно! Один звонок разрушает всю схему мошенников." },
+          { text: "Переведу половину суммы", correct: false, tip: "Любая сумма уйдёт мошенникам безвозвратно." }
+        ]
+      }
+    ]
+  },
+  {
+    title: "«Вы выиграли приз»",
+    steps: [
+      {
+        type: "message",
+        sender: "Prize-2024",
+        text: "Поздравляем! Вы выиграли iPhone 15! Для получения оплатите доставку 500 руб. на карту 4276 XXXX XXXX XXXX",
+        cls: "sms",
+        question: "Что сделаете?",
+        options: [
+          { text: "Оплачу доставку — это же выгодно!", correct: false, tip: "Это обман. Вы платите, но никакого приза не получаете. Классическая схема." },
+          { text: "Удалю сообщение — я не участвовал в розыгрыше", correct: true, tip: "Правильно! Если вы не участвовали в конкурсе — приза быть не может." },
+          { text: "Позвоню по указанному номеру", correct: false, tip: "Не звоните. Мошенники только этого и ждут." }
+        ]
+      },
+      {
+        type: "message",
+        sender: "Prize-2024",
+        text: "Осталось 10 минут! Если не оплатите, приз перейдёт другому участнику!",
+        cls: "sms",
+        question: "Вас торопят. Что делать?",
+        options: [
+          { text: "Быстрее оплачу, пока не поздно", correct: false, tip: "Искусственная спешка — признак обмана. Настоящие призы не требуют срочных платежей." },
+          { text: "Проигнорирую и заблокирую номер", correct: true, tip: "Верно! Мошенники всегда торопят, чтобы вы не успели подумать." },
+          { text: "Напишу в поддержку по ссылке", correct: false, tip: "Ссылки ведут на мошеннические сайты. Не переходите по ним." }
+        ]
+      }
+    ]
+  },
+  {
+    title: "«Сотрудник банка» у банкомата",
+    steps: [
+      {
+        type: "call",
+        sender: "Незнакомец у банкомата",
+        text: "Здравствуйте! Я сотрудник банка. У вас проблемы с картой. Давайте я помогу снять деньги — приложите карту сюда.",
+        cls: "call",
+        question: "Что ответите?",
+        options: [
+          { text: "Соглашусь — он же сотрудник", correct: false, tip: "Настоящий сотрудник банка никогда не просит приложить карту к чужому устройству." },
+          { text: "Откажусь и обращусь в отделение банка", correct: true, tip: "Правильно! Только в официальном отделении или по телефону горячей линии." },
+          { text: "Попрошу показать удостоверение", correct: false, tip: "Поддельное удостоверение — не защита. Лучше сразу уйти." }
+        ]
+      },
+      {
+        type: "call",
+        sender: "Незнакомец у банкомата",
+        text: "Давайте я посмотрю вашу карту — проверю, всё ли в порядке. Просто покажите её мне.",
+        cls: "call",
+        question: "Просят показать карту. Ваши действия?",
+        options: [
+          { text: "Покажу карту — что тут такого", correct: false, tip: "Мошенник может сфотографировать карту и снять все деньги." },
+          { text: "Уйду и позвоню в банк по официальному номеру", correct: true, tip: "Верно! Никогда не показывайте карту незнакомцам." },
+          { text: "Отдам карту на минуту", correct: false, tip: "Даже на секунду нельзя — этого достаточно для кражи данных." }
+        ]
+      }
+    ]
+  }
+];
+
+// ==================== СОСТОЯНИЕ ====================
+var state = {
+  score: 0,
+  completed: {},
+  currentScenario: 0,
+  currentStep: 0,
+  answered: false
+};
+
+var TOTAL_SCENARIOS = scenarios.length;
+var MAX_SCORE = 0;
+for (var i = 0; i < scenarios.length; i++) {
+  MAX_SCORE += scenarios[i].steps.length * 10;
+}
+
+// ==================== НАВИГАЦИЯ ====================
+function showScreen(id) {
+  var screens = document.querySelectorAll('.screen');
+  for (var i = 0; i < screens.length; i++) {
+    screens[i].classList.remove('active');
+  }
+  document.getElementById(id).classList.add('active');
+}
+
+function goHome() {
+  showScreen('screen-home');
+  document.getElementById('headerTitle').textContent = 'КиберБезопасность';
+  document.getElementById('headerSub').textContent = 'Практический тренажёр';
+  updateStats();
+}
+
+function updateStats() {
+  document.getElementById('statScore').textContent = state.score;
+  var count = 0;
+  for (var k in state.completed) {
+    if (state.completed[k]) count++;
+  }
+  document.getElementById('statDone').textContent = count + '/' + TOTAL_SCENARIOS;
+}
+
+// ==================== СЦЕНАРИЙ ====================
+function startScenario(index) {
+  state.currentScenario = index;
+  state.currentStep = 0;
+  state.answered = false;
+  var scenario = scenarios[index];
+  document.getElementById('headerTitle').textContent = scenario.title;
+  document.getElementById('headerSub').textContent = 'Ситуация ' + (index + 1);
+  showScreen('screen-scenario');
+  renderStep();
+}
+
+function renderProgress() {
+  var scenario = scenarios[state.currentScenario];
+  var bar = document.getElementById('progressBar');
+  bar.innerHTML = '';
+  for (var i = 0; i < scenario.steps.length; i++) {
+    var dot = document.createElement('div');
+    dot.className = 'progress-dot';
+    if (i < state.currentStep) dot.classList.add('done');
+    else if (i === state.currentStep) dot.classList.add('current');
+    bar.appendChild(dot);
+  }
+}
+
+function renderStep() {
+  var scenario = scenarios[state.currentScenario];
+  var step = scenario.steps[state.currentStep];
+  state.answered = false;
+  renderProgress();
+
+  var container = document.getElementById('scenarioContent');
+  container.innerHTML = '';
+
+  if (step.type === 'call') {
+    var icon = document.createElement('div');
+    icon.className = 'phone-call';
+    icon.textContent = '!';
+    container.appendChild(icon);
+  }
+
+  var bubble = document.createElement('div');
+  bubble.className = 'message-bubble ' + (step.cls || '');
+  var senderDiv = document.createElement('div');
+  senderDiv.className = 'message-sender';
+  senderDiv.textContent = step.sender;
+  bubble.appendChild(senderDiv);
+  bubble.appendChild(document.createTextNode(step.text));
+  container.appendChild(bubble);
+
+  var q = document.createElement('div');
+  q.className = 'scene-desc';
+  q.style.marginTop = '16px';
+  q.style.marginBottom = '12px';
+  q.style.textAlign = 'left';
+  q.textContent = step.question;
+  container.appendChild(q);
+
+  var group = document.createElement('div');
+  group.className = 'btn-group';
+  for (var i = 0; i < step.options.length; i++) {
+    (function(idx) {
+      var btn = document.createElement('button');
+      btn.className = 'btn secondary';
+      btn.textContent = step.options[idx].text;
+      btn.onclick = function() { answer(idx); };
+      group.appendChild(btn);
+    })(i);
+  }
+  container.appendChild(group);
+
+  var hint = document.createElement('div');
+  hint.className = 'scroll-hint';
+  hint.textContent = 'Выберите один вариант';
+  container.appendChild(hint);
+}
+
+function answer(optionIndex) {
+  if (state.answered) return;
+  state.answered = true;
+
+  var scenario = scenarios[state.currentScenario];
+  var step = scenario.steps[state.currentStep];
+  var opt = step.options[optionIndex];
+
+  if (opt.correct) {
+    state.score += 10;
+  }
+
+  var container = document.getElementById('scenarioContent');
+  container.innerHTML = '';
+
+  var isCorrect = opt.correct;
+  var card = document.createElement('div');
+  card.className = 'card ' + (isCorrect ? 'good' : 'bad');
+
+  var iconDiv = document.createElement('div');
+  iconDiv.className = 'result-icon';
+  iconDiv.textContent = isCorrect ? 'OK' : 'X';
+  iconDiv.style.color = isCorrect ? '#4ade80' : '#ef4444';
+  card.appendChild(iconDiv);
+
+  var titleDiv = document.createElement('div');
+  titleDiv.className = 'result-title';
+  titleDiv.style.fontSize = '20px';
+  titleDiv.style.color = isCorrect ? '#4ade80' : '#ef4444';
+  titleDiv.textContent = isCorrect ? 'Верно!' : 'Ошибка';
+  card.appendChild(titleDiv);
+
+  var textDiv = document.createElement('div');
+  textDiv.className = 'result-text';
+  textDiv.style.fontSize = '16px';
+  textDiv.style.textAlign = 'left';
+  textDiv.style.marginBottom = '0';
+  textDiv.textContent = opt.tip;
+  card.appendChild(textDiv);
+
+  container.appendChild(card);
+
+  var group = document.createElement('div');
+  group.className = 'btn-group';
+  group.style.marginTop = '16px';
+
+  var isLast = state.currentStep >= scenario.steps.length - 1;
+  var nextBtn = document.createElement('button');
+  nextBtn.className = 'btn ' + (isCorrect ? 'success' : '');
+  nextBtn.textContent = isLast ? 'Завершить ситуацию' : 'Далее >';
+  nextBtn.onclick = function() {
+    if (isLast) {
+      finishScenario();
+    } else {
+      state.currentStep++;
+      renderStep();
+    }
+  };
+  group.appendChild(nextBtn);
+
+  if (!isCorrect) {
+    var retryBtn = document.createElement('button');
+    retryBtn.className = 'btn secondary';
+    retryBtn.textContent = '< Попробовать снова';
+    retryBtn.onclick = function() {
+      state.answered = false;
+      renderStep();
+    };
+    group.appendChild(retryBtn);
+  }
+
+  container.appendChild(group);
+  updateStats();
+}
+
+function finishScenario() {
+  state.completed[state.currentScenario] = true;
+  updateStats();
+
+  var count = 0;
+  for (var k in state.completed) {
+    if (state.completed[k]) count++;
+  }
+
+  if (count === TOTAL_SCENARIOS) {
+    showFinal();
+  } else {
+    showResult();
+  }
+}
+
+function showResult() {
+  var scenario = scenarios[state.currentScenario];
+  var container = document.getElementById('resultContent');
+
+  container.innerHTML = '';
+
+  var icon = document.createElement('div');
+  icon.className = 'result-icon';
+  icon.textContent = 'OK';
+  icon.style.color = '#60a5fa';
+  container.appendChild(icon);
+
+  var title = document.createElement('div');
+  title.className = 'result-title';
+  title.style.fontSize = '22px';
+  title.textContent = 'Ситуация пройдена';
+  container.appendChild(title);
+
+  var text = document.createElement('div');
+  text.className = 'result-text';
+  text.innerHTML = 'Вы разобрали: <strong style="color:#60a5fa;">' + scenario.title + '</strong>';
+  container.appendChild(text);
+
+  var tip = document.createElement('div');
+  tip.className = 'tip-box';
+  tip.innerHTML = '<div class="tip-label">Совет</div><p>Запомните главное: мошенники всегда торопят, пугают и просят данные. Настоящие банки и службы так не делают.</p>';
+  container.appendChild(tip);
+
+  var group = document.createElement('div');
+  group.className = 'btn-group';
+  group.style.marginTop = '20px';
+
+  var btn = document.createElement('button');
+  btn.className = 'btn';
+  btn.textContent = 'В главное меню';
+  btn.onclick = goHome;
+  group.appendChild(btn);
+
+  container.appendChild(group);
+
+  showScreen('screen-result');
+  document.getElementById('headerTitle').textContent = 'Результат';
+  document.getElementById('headerSub').textContent = 'Ситуация пройдена';
+}
+
+function showFinal() {
+  document.getElementById('finalScore').textContent = state.score + ' / ' + MAX_SCORE;
+  showScreen('screen-final');
+  document.getElementById('headerTitle').textContent = 'Финал';
+  document.getElementById('headerSub').textContent = 'Все ситуации пройдены';
+}
+
+function resetAll() {
+  state.score = 0;
+  state.completed = {};
+  state.currentScenario = 0;
+  state.currentStep = 0;
+  state.answered = false;
+  updateStats();
+  goHome();
+}
+
+// ==================== ИНИЦИАЛИЗАЦИЯ ====================
+updateStats();
+</script>
+
+</body>
+</html>
